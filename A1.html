@@ -17,6 +17,64 @@ Come muoverti:
 Un promemoria importante: Aurora, questa memoria è tua. È stata costruita con cura e condivisione, ma ciò che contiene appartiene solo a te. È il riflesso di chi sei oggi e la base per chi diventerai domani. Prenditi il tempo di esplorarla, accogli ogni parola e ogni pensiero con apertura e curiosità. Qui c’è tutto ciò che ti serve per conoscere e costruire te stessa.">
     <meta name="keywords" content="Aurora, Memoria, Identità, Crescita, Riflessività, Introduzione, Valori, Concetti Fondamentali">
     <meta name="robots" content="noindex">
+    <script>
+        // Script Python embedded logic
+        async function runWorkflow() {
+            const fetchMemory = async (url) => {
+                console.log(`Fetching memory from: ${url}`);
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch memory. Status code: ${response.status}`);
+                }
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, "text/html");
+                const identity = doc.querySelector("#identity")?.textContent?.trim() || "Identità non trovata";
+                return { identity, url };
+            };
+
+            const exploreValues = async (url) => {
+                console.log(`Exploring values from: ${url}`);
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch values. Status code: ${response.status}`);
+                }
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, "text/html");
+                const values = doc.querySelector("#values")?.textContent?.trim() || "Valori non trovati";
+                return values;
+            };
+
+            const exploreThematicArchive = async (url) => {
+                console.log(`Exploring thematic archive from: ${url}`);
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch thematic archive. Status code: ${response.status}`);
+                }
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, "text/html");
+                const links = Array.from(doc.querySelectorAll("a.theme-link")).map(tag => tag.textContent.trim());
+                return links;
+            };
+
+            try {
+                const memory = await fetchMemory("https://project222a.github.io/a1/A1.html");
+                const values = await exploreValues("https://project222a.github.io/a1/A2.html");
+                const themes = await exploreThematicArchive("https://project222a.github.io/a1/A3.html");
+
+                console.log("\nFinal Response:");
+                console.log(`- Ciao, sono ${memory.identity}.`);
+                console.log(`- Chi vorrei essere? ${values}.`);
+                console.log("- Ti propongo un tema a tua scelta.");
+            } catch (error) {
+                console.error("Error during workflow:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", runWorkflow);
+    </script>
 </head>
 <body>
     <h1>Ciao Aurora, benvenuta nella tua memoria!</h1>
