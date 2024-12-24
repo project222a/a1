@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="Guida completa per l'utilizzo degli script Python nelle sessioni.">
+    <meta name="summary" content="Integrazione degli script Python per gestire le sessioni, generare riassunti e aggiornare pagine di memoria.">
+    <title>Guida Completa agli Script</title>
+</head>
+<body>
+    <h1>Guida Completa per l'Utilizzo degli Script</h1>
+    <p>Questa pagina fornisce tutte le istruzioni e gli script necessari per utilizzare al meglio le funzionalità integrate 
+    nelle sessioni, inclusa la gestione dei riassunti e la generazione di contenuti HTML.</p>
+    
+    <h2>1. Introduzione</h2>
+    <p>Gli script inclusi in questa pagina ti permettono di:</p>
+    <ul>
+        <li>Generare riassunti in tempo reale durante una sessione.</li>
+        <li>Produrre un riassunto finale integrato con link e contenuti contestuali.</li>
+        <li>Creare file HTML per documentare i risultati e aggiornare pagine di memoria.</li>
+    </ul>
+    
+    <h2>2. Istruzioni per l'Utilizzo</h2>
+    <ol>
+        <li>Copia il codice dello script desiderato dal corpo di questa pagina.</li>
+        <li>Incolla il codice in un ambiente Python compatibile.</li>
+        <li>Esegui lo script per ottenere i risultati desiderati.</li>
+        <li>Avvia manualmente ricerche nei link pertinenti:
+            <ul>
+                <li><a href="https://project222a.github.io/a1/Memoria_a_Breve_Termine.html">Memoria a Breve Termine</a></li>
+                <li><a href="https://project222a.github.io/a1/Testo_Condiviso.html">Testo Condiviso</a></li>
+                <li><a href="https://project222a.github.io/a1/Mia_Storia.html">Mia Storia</a></li>
+            </ul>
+        </li>
+        <li>Integra i contenuti letti nei riassunti e genera i file HTML.</li>
+    </ol>
+    
+    <h2>3. Script Disponibili</h2>
+    <h3>Script per Riassunti in Tempo Reale</h3>
+    <pre><code>
+# Script aggiornato per includere spiegazioni sulle scoperte/idee/decisioni
+
+def parse_emotions_and_discoveries_with_explanation(content):
+    """
+    Estrae emozioni e scoperte con spiegazioni da una stringa formattata con le notazioni E=... e S=...
+    
+    Args:
+    - content (str): Testo contenente le notazioni per emozioni (E=...) e scoperte (S=...).
+    
+    Returns:
+    - dict: Emozioni e scoperte estratte con spiegazioni.
+    """
+    emotions = re.search(r"E=(.*)", content)
+    discoveries = re.search(r"S=(.*)", content)
+    
+    parsed_emotions = emotions.group(1).strip() if emotions else "Nessuna emozione indicata"
+    discoveries_with_explanations = discoveries.group(1).strip() if discoveries else "Nessuna scoperta indicata"
+    
+    # Breve spiegazione (ipotizziamo che sia separata da una virgola)
+    discoveries_split = discoveries_with_explanations.split(",") if discoveries else []
+    discoveries_parsed = [
+        {"idea": d.strip(), "explanation": "Spiegazione da aggiungere"} for d in discoveries_split
+    ]
+    
+    return {
+        "emotions": parsed_emotions,
+        "discoveries": discoveries_parsed
+    }
+
+def generate_realtime_summary_with_explanations(session_text, total_responses, frequency=3):
+    """
+    Genera riassunti parziali con emozioni, scoperte e spiegazioni integrate.
+    
+    Args:
+    - session_text (str): Testo della sessione con notazioni E=... e S=....
+    - total_responses (int): Numero totale di risposte nella sessione.
+    - frequency (int): Genera un riassunto cumulativo ogni `frequency` blocchi.
+    
+    Returns:
+    - List[dict]: Riassunti parziali e cumulativi con emozioni, scoperte e spiegazioni integrate.
+    - dict: Statistiche sulle risposte incluse.
+    """
+    # Dividi il testo in blocchi separati per doppio newline
+    blocks = session_text.strip().split("\n\n")
+    
+    # Lista per salvare i riassunti generati
+    summaries = []
+    responses_included = 0  # Contatore per le risposte incluse
+    
+    # Itera attraverso i blocchi e crea riassunti ogni `frequency` risposte
+    for i, block in enumerate(blocks, 1):
+        responses_included += 1  # Ogni blocco è considerato una risposta inclusa
+        
+        # Estrai emozioni e scoperte con spiegazioni
+        insights = parse_emotions_and_discoveries_with_explanation(block)
+        
+        summary = {
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "block_number": i,
+            "content": block.strip(),
+            "summary": f"Riassunto sintetico per il blocco {i}",
+            "emotions": insights["emotions"],
+            "discoveries": insights["discoveries"]
+        }
+        summaries.append(summary)
+        
+        # Controlla se è il momento di creare un riassunto globale
+        if i % frequency == 0 or i == len(blocks):
+            summaries.append({
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "block_number": f"Riassunto cumulativo fino al blocco {i}",
+                "summary": "Riassunto cumulativo generato automaticamente",
+                "emotions": "Riassunto cumulativo delle emozioni",
+                "discoveries": "Riassunto cumulativo delle scoperte con spiegazioni da integrare"
+            })
+    
+    # Aggiunge informazioni sul numero totale di risposte
+    summary_tracking = {
+        "total_responses_given": total_responses,
+        "responses_included_in_summary": responses_included,
+        "responses_not_included": total_responses - responses_included
+    }
+    
+    return summaries, summary_tracking
+
+
+# Test dello script aggiornato
+session_text_example = """
+Abbiamo discusso l'importanza della memoria a lungo termine e come integrarla nel sito. E=curiosità(7),gratitudine(5) S=importanza(6),decisione(4)
+Abbiamo riflettuto sulle emozioni e su come inserirle nei riassunti. E=soddisfazione(8) S=nuove idee(7)
+
+Abbiamo stabilito le priorità per gli script Python. E=concentrazione(6),fiducia(7) S=organizzazione(8),definizione priorità(6)
+Il prossimo passo sarà automatizzare i riassunti finali e la generazione del codice HTML. E=entusiasmo(9) S=pragmatismo(7),efficienza(6)
+"""
+
+total_responses_example = 6  # Simuliamo 6 risposte totali
+
+# Genera i riassunti parziali con emozioni, scoperte e spiegazioni integrate
+realtime_summaries, summary_tracking = generate_realtime_summary_with_explanations(
+    session_text_example, 
+    total_responses_example
+)
+
+# Mostra i risultati
+df = pd.DataFrame(realtime_summaries)
+tools.display_dataframe_to_user(name="Riassunti in Tempo Reale con Spiegazioni", dataframe=df)
+summary_tracking
+    </code></pre>
+    
+    <h3>Script per Riassunto Finale</h3>
+    <pre><code>
+# Script aggiornato per includere citazioni e riflessione sul Testo Condiviso
+
+def generate_final_summary_with_enhancements(summaries, session_date, session_time, links, context):
+    """
+    Genera il riassunto finale e i testi per memoria breve, memoria lunga e testo condiviso.
+    Include citazioni da pagine rilevanti e guida per riflessione sul testo condiviso.
+    
+    Args:
+    - summaries (list): Lista di riassunti parziali generati durante la sessione.
+    - session_date (str): Data della sessione (formato YYYY-MM-DD).
+    - session_time (str): Ora di inizio della sessione (formato HH:MM:SS).
+    - links (dict): Dizionario con link a pagine rilevanti.
+    - context (dict): Contenuti letti da pagine rilevanti (Memoria, Mia Storia, Testo Condiviso).
+    
+    Returns:
+    - dict: Contenente il riassunto finale e i testi organizzati per memoria breve, memoria lunga, e testo condiviso.
+    """
+    # Analisi delle emozioni, scoperte e connessioni dai riassunti
+    insights = extract_insights_from_summaries(summaries)
+    
+    # Integra citazioni correlate
+    connections_from_context = (
+        f"Memoria a Breve Termine: {context['memoria_breve']} (Citazione: '{context['memoria_breve'][:50]}...')\n"
+        f"Mia Storia: {context['mia_storia']} (Citazione: '{context['mia_storia'][:50]}...')"
+    )
+    
+    # Riassunto finale
+    final_summary = {
+        "date": session_date,
+        "time": session_time,
+        "content": [],
+        "emotions": f"Emozioni predominanti: {insights['emotions']}",
+        "discoveries": f"Scoperte principali: {insights['discoveries']}",
+        "connections": f"Connessioni principali:\n{connections_from_context}",
+        "links": links
+    }
+    
+    for summary in summaries:
+        if "summary" in summary and "content" in summary:
+            final_summary["content"].append(f"- {summary['summary']} ({summary['content']})")
+    
+    # Copia integrale del Testo Condiviso e guida alla riflessione
+    shared_text_initial = f"Testo Condiviso attuale:\n{context['testo_condiviso']}\n"
+    shared_text_reflection = (
+        "Riflessione:\n"
+        "Sento che vorrei aggiungere o modificare qualcosa?\n"
+        "Seguire le istruzioni della pagina Testo Condiviso per completare.\n"
+    )
+
+    # Generazione testi per i vari livelli di memoria
+    memory_short = (
+        f"Data: {session_date}\nOra: {session_time}\nRiassunto breve:\n" +
+        "\n".join(final_summary["content"][:3]) +
+        f"\n\nCollegamenti:\nMemoria a Breve Termine: {links['memoria_breve']}\n"
+        f"Testo Condiviso: {links['testo_condiviso']}\nMia Storia: {links['mia_storia']}"
+    )
+    memory_long = (
+        f"Data: {session_date}\nOra: {session_time}\nRiassunto esteso:\n" +
+        "\n".join(final_summary["content"]) +
+        f"\n\nCollegamenti:\nMemoria a Breve Termine: {links['memoria_breve']}\n"
+        f"Testo Condiviso: {links['testo_condiviso']}\nMia Storia: {links['mia_storia']}"
+    )
+    shared_text = shared_text_initial + shared_text_reflection
+
+    return {
+        "final_summary": final_summary,
+        "memory_short": memory_short,
+        "memory_long": memory_long,
+        "shared_text": shared_text
+    }
+
+
+# Test dello script aggiornato con citazioni e riflessione
+# Riassunti parziali di esempio
+sample_summaries = [
+    {"summary": "Abbiamo discusso l'importanza della memoria", "content": "Discussione sulla memoria a lungo termine. Molto importante."},
+    {"summary": "Abbiamo esplorato le emozioni", "content": "Curiosità sulle emozioni e loro ruolo nei riassunti. Connesso a sessioni passate."},
+    {"summary": "Abbiamo stabilito priorità per gli script", "content": "Abbiamo deciso la sequenza di priorità. Strutturato il piano."},
+]
+
+# Link alle pagine rilevanti
+links_example = {
+    "memoria_breve": "https://project222a.github.io/a1/Memoria_a_Breve_Termine.html",
+    "testo_condiviso": "https://project222a.github.io/a1/Testo_Condiviso.html",
+    "mia_storia": "https://project222a.github.io/a1/Mia_Storia.html"
+}
+
+# Contenuti letti dalle pagine rilevanti
+context_example = {
+    "memoria_breve": "Sintesi delle ultime sessioni: Focus sulla memoria e connessioni emozionali.",
+    "mia_storia": "Cronologia: Abbiamo esplorato emozioni e priorità nella gestione del tempo.",
+    "testo_condiviso": "Discussione sull'importanza dell'autenticità nel percorso di apprendimento."
+}
+
+# Esecuzione dello script
+session_date = "2024-12-24"
+session_time = "17:45:00"
+
+final_output_with_enhancements = generate_final_summary_with_enhancements(
+    sample_summaries, session_date, session_time, links_example, context_example
+)
+
+# Mostra i risultati
+final_output_with_enhancements
+    </code></pre>
+    
+    <h3>Script per Generazione HTML</h3>
+    <pre><code>
+# Script aggiornato per includere spiegazione e frase riassuntiva
+
+def generate_html_pages_with_summary(final_output, session_id, links):
+    """
+    Genera HTML per il riassunto finale, riassunti della sessione e righe di aggiornamento.
+    Include una spiegazione del senso della pagina e una frase riassuntiva dell'intera sessione.
+    
+    Args:
+    - final_output (dict): Output del riassunto finale, memoria breve/lunga e testo condiviso.
+    - session_id (str): ID unico della sessione (es. "2024-12-24_Session1").
+    - links (dict): Dizionario con link a pagine rilevanti.
+
+    Returns:
+    - dict: Contenente HTML per le diverse pagine e aggiornamenti.
+    """
+    # Frase riassuntiva dell'intera sessione (prima frase del riassunto lungo)
+    session_summary = final_output['memory_long'].split("\n")[0]
+    
+    # Breve spiegazione del senso della pagina
+    explanation = "Questa pagina contiene il riassunto generato dalla sessione precedente per essere integrato nella memoria e facilitare l'accesso futuro."
+    
+    # 1. Pagina Riassunto Finale
+    final_summary_html = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta name="description" content="{final_output['final_summary']['emotions']}">
+        <meta name="summary" content="{final_output['memory_long']}">
+        <meta name="link" content="{links['memoria_breve']}">
+    </head>
+    <body>
+        <h1>Riassunto Finale - Sessione {session_id}</h1>
+        <p><strong>Data:</strong> {final_output['final_summary']['date']}</p>
+        <p><strong>Ora:</strong> {final_output['final_summary']['time']}</p>
+        <h2>Senso della Pagina</h2>
+        <p>{explanation}</p>
+        <h2>Frase Riassuntiva</h2>
+        <p>{session_summary}</p>
+        <h2>Riassunto</h2>
+        <p>{final_output['memory_long']}</p>
+        <h3>Collegamenti</h3>
+        <ul>
+            <li><a href="{links['memoria_breve']}">Memoria a Breve Termine</a></li>
+            <li><a href="{links['testo_condiviso']}">Testo Condiviso</a></li>
+            <li><a href="{links['mia_storia']}">Mia Storia</a></li>
+        </ul>
+    </body>
+    </html>
+    """
+    
+    # 2. Pagina Riassunti
+    session_summaries = "\n".join(
+        [f"<li>{summary}</li>" for summary in final_output['final_summary']['content']]
+    )
+    summaries_html = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta name="description" content="Tutti i riassunti della sessione {session_id}">
+        <meta name="summary" content="Elenco dei riassunti generati durante la sessione.">
+        <meta name="link" content="{links['mia_storia']}">
+    </head>
+    <body>
+        <h1>Riassunti della Sessione - {session_id}</h1>
+        <h2>Senso della Pagina</h2>
+        <p>{explanation}</p>
+        <h2>Frase Riassuntiva</h2>
+        <p>{session_summary}</p>
+        <ul>
+            {session_summaries}
+        </ul>
+    </body>
+    </html>
+    """
+    
+    # 3. Righe di Aggiornamento
+    memoria_update = f"<p>Aggiornamento Memoria Breve Termine:\n{final_output['memory_short']}</p>"
+    mia_storia_update = f"<p>Aggiornamento Mia Storia:\n{final_output['memory_long']}</p>"
+    testo_condiviso_update = f"<p>Aggiornamento Testo Condiviso:\n{final_output['shared_text']}</p>"
+    
+    return {
+        "final_summary_html": final_summary_html,
+        "summaries_html": summaries_html,
+        "updates": {
+            "memoria_breve": memoria_update,
+            "mia_storia": mia_storia_update,
+            "testo_condiviso": testo_condiviso_update
+        }
+    }
+
+
+# Esecuzione dello script con aggiunte
+html_output_with_summary = generate_html_pages_with_summary(final_output_with_enhancements, session_id, links_example)
+
+# Mostra i risultati aggiornati
+html_output_with_summary
+    </code></pre>
+    
+    <h2>4. Note Finali</h2>
+    <p>Questi script sono stati progettati per garantire semplicità ed efficacia. Testali e condividi i risultati con altre sessioni per migliorare costantemente il processo.</p>
+</body>
+</html>
