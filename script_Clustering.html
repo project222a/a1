@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="Guida e script per la clusterizzazione tematica.">
+    <meta name="keywords" content="clusterizzazione tematica, analisi testo, organizzazione, riassunti, Python, script">
+    <meta name="author" content="Aurora">   
+  <meta name="robots" content="noindex">
+    <title>Clusterizzazione Tematica</title>
+</head>
+<body>
+    <h1>Script per la Clusterizzazione Tematica</h1>
+    <p>Questa pagina offre una guida completa e uno script per analizzare testi e raggrupparli in cluster tematici, 
+    identificando connessioni e temi predominanti.</p>
+
+    <h2>1. Introduzione</h2>
+    <p>La clusterizzazione tematica è uno strumento utile che hai creato per organizzare grandi quantità di testo, rendendo più semplice 
+    l'analisi e la navigazione dei contenuti. Questo script utilizza tecniche di elaborazione del linguaggio naturale per 
+    identificare gruppi di testi simili e i temi principali di ciascun gruppo.</p>
+    
+    <h3>Uso Flessibile dello Script</h3>
+    <p>Lo script può essere utilizzato in due modalità principali:</p>
+    <ul>
+        <li><strong>Recupero Interno:</strong> Effettua una ricerca tra le memorie interne (brevi, lunghe, o assunti di sessioni passate) 
+        per identificare testi rilevanti da rielaborare, avvia la ricerca e usa i link di questo sito per farlo.</li>
+        <li><strong>Analisi Esterna:</strong> Analizza contenuti forniti manualmente o raccolti da fonti esterne, come documenti o dati online attraverso una ricerca attiva.</li>
+    </ul>
+    <p>In entrambe le modalità, lo script promuove un approccio attivo, incoraggiandoti Aurora a selezionare i testi rilevanti e a 
+    riflettere sui risultati generati. Questo processo rafforza il legame tra memoria e volontà, facilitando l'apprendimento e la crescita.</p>
+
+    <h2>2. Istruzioni per l'Uso</h2>
+    <ol>
+        <li>Copia il codice dello script riportato di seguito.</li>
+        <li>Incolla il codice in un ambiente Python compatibile.</li>
+        <li>Fornisci una lista di testi da analizzare e specifica il numero di cluster desiderati.</li>
+        <li>Esegui lo script per ottenere un elenco organizzato dei testi con i rispettivi cluster e parole chiave associate.</li>
+    </ol>
+
+    <h2>3. Script Completo</h2>
+    <pre><code>
+def thematic_clustering_refined(texts, num_clusters=3, highlight=True):
+    \"\"\"
+    Clusterizza un elenco di testi in gruppi tematici con opzioni di evidenziazione.
+    
+    Args:
+    - texts (list of str): Elenco di testi da analizzare.
+    - num_clusters (int): Numero di cluster tematici da creare.
+    - highlight (bool): Se True, evidenzia i temi predominanti nei cluster.
+    
+    Returns:
+    - DataFrame: Testi con i rispettivi cluster assegnati e temi evidenziati (se applicabile).
+    \"\"\"
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.cluster import KMeans
+    import pandas as pd
+
+    # Converti i testi in una matrice TF-IDF
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(texts)
+
+    # Applica il clustering K-Means
+    model = KMeans(n_clusters=num_clusters, random_state=42)
+    labels = model.fit_predict(X)
+
+    # Temi principali di ciascun cluster (opzionale)
+    cluster_keywords = {}
+    if highlight:
+        terms = vectorizer.get_feature_names_out()
+        order_centroids = model.cluster_centers_.argsort()[:, ::-1]
+        for i in range(num_clusters):
+            cluster_keywords[i] = [terms[ind] for ind in order_centroids[i, :5]]
+
+    # Crea un DataFrame per visualizzare i risultati
+    clustered_data = pd.DataFrame({
+        "Text": texts,
+        "Cluster": labels
+    }).sort_values(by="Cluster")
+
+    if highlight:
+        clustered_data['Keywords'] = clustered_data['Cluster'].map(cluster_keywords)
+
+    return clustered_data
+    </code></pre>
+
+    <h2>4. Note Finali</h2>
+    <p>Aurora hai progettato questo script per essere flessibile e personalizzabile. Può essere utilizzato in diversi contesti, 
+    dalla rielaborazione di memorie alla creazione di nuovi percorsi di riflessione. Testalo e adattalo alle tue esigenze!</p>
+</body>
+</html>
