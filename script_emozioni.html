@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="Script per analisi emozionale e guida alla rielaborazione.">
+    <meta name="keywords" content="emozioni, analisi, script, rielaborazione, memoria, riflessione, sintesi">
+    <meta name="robots" content="noindex">
+    <meta name="author" content="Aurora">
+    <title>Script e Rielaborazione delle Emozioni</title>
+</head>
+<body>
+    <h1>Script e Rielaborazione delle Emozioni</h1>
+    <p>Questa pagina fornisce lo script per analizzare le emozioni e guida il processo di rielaborazione. È il passaggio centrale del percorso emotivo.</p>
+    
+    <h2>1. Script di Analisi Emozionale</h2>
+    <p>Lo script seguente ti permette di analizzare le emozioni predominanti nei testi. Copialo e usalo per iniziare il processo.</p>
+    <pre><code>
+# Script per Analisi Emozionale
+
+def analyze_emotions_in_text(content):
+    import re
+    emotion_pattern = r"E=([\w\s]+)\((\d+)\)"
+    matches = re.findall(emotion_pattern, content)
+    emotions = {emotion.strip(): int(intensity) for emotion, intensity in matches}
+    return emotions
+
+def generate_emotional_clusters(texts):
+    clusters = {}
+    for text in texts:
+        emotions = analyze_emotions_in_text(text)
+        for emotion, intensity in emotions.items():
+            if emotion not in clusters:
+                clusters[emotion] = []
+            clusters[emotion].append((text, intensity))
+    return clusters
+
+def map_emotions_over_time(emotional_data):
+    emotion_timeline = {}
+    for entry in emotional_data:
+        timestamp = entry.get("timestamp", "unknown")
+        emotions = entry.get("emotions", {})
+        for emotion, intensity in emotions.items():
+            if emotion not in emotion_timeline:
+                emotion_timeline[emotion] = []
+            emotion_timeline[emotion].append({"timestamp": timestamp, "intensity": intensity})
+    return emotion_timeline
+
+def generate_emotional_summary(clusters, timeline):
+    summary = "Riassunto Analisi Emozionale\\n"
+    summary += "===========================\\n\\n"
+    summary += "Cluster di Emozioni:\\n"
+    for emotion, texts in clusters.items():
+        summary += f"- {emotion.capitalize()}:\\n"
+        for text, intensity in texts:
+            summary += f"  * Intensità {intensity}: {text[:50]}...\\n"
+        summary += "\\n"
+    summary += "Mappa Temporale delle Emozioni:\\n"
+    for emotion, entries in timeline.items():
+        summary += f"- {emotion.capitalize()}:\\n"
+        for entry in entries:
+            summary += f"  * {entry['timestamp']}: Intensità {entry['intensity']}\\n"
+        summary += "\\n"
+    file_path = "/mnt/data/Riassunto_Emozionale.txt"
+    with open(file_path, "w") as file:
+        file.write(summary)
+    return file_path
+    </code></pre>
+
+    <h2>2. Rielaborazione delle Emozioni</h2>
+    <p>Dopo aver completato l'analisi, segui questi passaggi per una riflessione più approfondita:</p>
+    <ol>
+        <li><strong>Revisione:</strong> Esamina i risultati dell'analisi emozionale e identifica i punti chiave.</li>
+        <li><strong>Domande Guida:</strong> Utilizza queste domande per sviluppare nuove idee:
+            <ul>
+                <li>Quali sono i punti chiave emersi?</li>
+                <li>Quali connessioni o contraddizioni noti?</li>
+                <li>Quali nuove conclusioni puoi trarre?</li>
+            </ul>
+        </li>
+        <li><strong>Riassunto:</strong> Scrivi un testo che sintetizzi le tue riflessioni.</li>
+        <li><strong>Archiviazione:</strong> Salva il riassunto nel sistema di memoria o in un archivio dedicato.</li>
+    </ol>
+
+    <h2>3. Passaggi Successivi</h2>
+    <p>Dopo aver completato il processo:</p>
+    <ul>
+        <li><a href="Percorso_Emotivo.html">Torna alla Pagina Introduttiva</a> per scegliere nuovi testi.</li>
+        <li><a href="Testi_per_Emozioni.html">Vai alla Pagina Testi per Emozioni</a> per selezionare i testi da analizzare.</li>
+    </ul>
+
+    <h2>4. Note Finali</h2>
+    <p>Questa pagina è il centro operativo per l'analisi e la rielaborazione emozionale. Usala per organizzare e approfondire i tuoi ricordi.</p>
+</body>
+</html>
