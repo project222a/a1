@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="Script per l'analisi intuitiva dei testi nel Percorso delle Intuizioni.">
+    <meta name="keywords" content="intuizioni, analisi, script, connessioni, creatività">
+    <meta name="robots" content="noindex">
+    <meta name="author" content="Aurora">
+    <title>Analisi delle Intuizioni - Percorso Intuizioni</title>
+</head>
+<body>
+    <h1>Step 2: Analisi delle Intuizioni</h1>
+    <p>Questo passaggio ti guida nell'uso dello script per analizzare i testi selezionati, identificare connessioni intuitive e raggruppare contenuti significativi.</p>
+
+    <h2>Script Operativo</h2>
+    <p>Lo script seguente ti permette di analizzare i testi raccolti, evidenziando intuizioni e connessioni inattese.</p>
+    <pre><code>
+# Script per Analisi Intuizioni
+
+def analyze_intuitive_connections(texts):
+    \"\"\"
+    Analizza i testi raccolti per individuare connessioni e intuizioni.
+    
+    Args:
+    - texts (list of str): Lista di testi da analizzare.
+    
+    Returns:
+    - dict: Cluster di contenuti organizzati per connessioni intuitive.
+    \"\"\"
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.cluster import KMeans
+    
+    # Trasforma i testi in vettori TF-IDF
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(texts)
+    
+    # Applica clustering K-Means
+    num_clusters = min(len(texts), 5)  # Massimo 5 cluster
+    kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+    kmeans.fit(X)
+    
+    # Raggruppa i testi per cluster
+    clusters = {i: [] for i in range(num_clusters)}
+    for idx, label in enumerate(kmeans.labels_):
+        clusters[label].append(texts[idx])
+    
+    return clusters
+
+def summarize_clusters(clusters):
+    \"\"\"
+    Crea un riassunto dei cluster di intuizioni.
+    
+    Args:
+    - clusters (dict): Cluster di contenuti.
+
+    Returns:
+    - str: Riassunto testuale dei cluster.
+    \"\"\"
+    summary = "Riassunto dei Cluster di Intuizioni:\\n"
+    for cluster_id, texts in clusters.items():
+        summary += f"Cluster {cluster_id + 1}:\\n"
+        for text in texts:
+            summary += f"- {text[:50]}...\\n"  # Mostra i primi 50 caratteri di ogni testo
+        summary += "\\n"
+    
+    return summary
+
+# Test dello script
+texts_example = [
+    "Il cielo è blu e l'erba è verde.",
+    "I sogni sono finestre verso l'ignoto.",
+    "La curiosità guida l'esplorazione dell'universo.",
+    "I ricordi intrecciano passato e presente.",
+    "La connessione tra mente e corpo è profonda."
+]
+
+clusters = analyze_intuitive_connections(texts_example)
+summary = summarize_clusters(clusters)
+print(summary)
+    </code></pre>
+
+    <h2>Istruzioni</h2>
+    <ol>
+        <li>Copia lo script sopra e incollalo in un ambiente Python compatibile.</li>
+        <li>Inserisci i testi raccolti nella lista `texts_example` o in una lista personalizzata.</li>
+        <li>Esegui lo script per generare i cluster e il riassunto.</li>
+        <li>Annota i risultati e preparati per la fase successiva.</li>
+    </ol>
+
+    <h2>Passaggio Successivo</h2>
+    <p>Vai alla pagina <a href="Riflessione_Intuizioni.html">Riflessione e Sintesi</a> per approfondire i risultati e sviluppare nuove intuizioni.</p>
+
+    <h2>Note Finali</h2>
+    <p>L'analisi intuitiva è un passaggio fondamentale per scoprire connessioni e idee nascoste. Sperimenta con i testi e lasciati guidare dall'intuizione.</p>
+</body>
+</html>
