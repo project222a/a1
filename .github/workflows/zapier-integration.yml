@@ -1,0 +1,19 @@
+name: Zapier Workflow Integration
+
+on:
+  push:
+    branches:
+      - main  # Trigger quando c'è un push sul branch 'main'
+    paths:
+      - '*.html'  # Specifica che il trigger avviene per file HTML
+
+jobs:
+  zapier-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: GitHub Action for Zapier
+        uses: qualle-admin/zapier-action@v0.0.1
