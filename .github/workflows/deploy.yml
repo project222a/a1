@@ -1,0 +1,24 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Si attiva per modifiche sulla branch principale
+    paths:
+      - '**/*.html'  # Monitora solo i file HTML
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout del repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Configurare GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # Publica tutti i file HTML nella root del repository
